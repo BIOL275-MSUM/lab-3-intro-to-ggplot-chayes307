@@ -1,6 +1,6 @@
 ---
 title: "Lab 3 Report"
-author: "___"
+author: "Connor Hayes"
 date: "`r format(Sys.Date())`"
 output: github_document
 ---
@@ -11,19 +11,41 @@ Instructions for this lab report can be found on [Your assignment section of Lab
 
 > A. Insert an R code chunk and create a graph depicting the frequency distribution of the 35 mass measurements. It should have legible text and appropriate axis labels.
 
-\_\_\_
+
+```{r}
+
+# load packages -----------------------------------------------------------
+
+library(tidyverse)
+
+
+# Mass of firefly ---------------------------------------------------------
+firefly_data <- read_csv ("https://whitlockschluter.zoology.ubc.ca/wp-content/data/chapter02/chap02q19FireflySpermatophoreMass.csv")
+
+count (firefly_data, spermatophoreMass)
+ggplot(data = firefly_data)
+
+ggplot(data = firefly_data) +
+  geom_histogram(mapping = aes(x = spermatophoreMass))
+
+
+# Cleaning up the graph ---------------------------------------------------
+ggplot(data = firefly_data) +
+  geom_histogram(mapping = aes(x =spermatophoreMass), binwidth = 0.010)+
+labs(x="Spermatophore_Mass", y="Count (of Males)")
+```
 
 > B. What type of graph did you choose in part (A)? Why?
 
-\_\_\_
+* Histogram. I chose this graph due to the fact we only used numerical variables to help define our graph. 
 
 > C. Describe the shape of the frequency distribution. What are its main features?
 
-\_\_\_
+* Right skewed what we see is that the averages are a lot higher on the left side compared to the right side. What we also see is that the mean, median, and mode will all be different numbers (the mean and mode are two different numbers compared to a bell curve where the mean and mode are the same number.)
 
 > D. What term would be used to describe the largest measurement in the frequency distribution? You can refer to the lecture slides, your notes, or the textbook.
 
-\_\_\_
+* An outlier
 
 ## Bird orders
 
@@ -36,27 +58,63 @@ birds <- ebird_taxonomy %>%           # start with the ebird_taxonomy data
   filter(category == "species")       # remove non-species taxa
 ```
 
+
+```{r}
+birds
+distinct(birds, scientific_name)
+count(birds, order)
+```
+  
+
 > E. How many bird species are in the new birds dataset? How did you find out?
 
-\_\_\_
+* There are 10,721 bird species in the new birds dataset, this can be figured out by pulling up the data table and reading the species_code portionor by creating a contingency table
+
 
 > H. How many orders are there? You can get this right by counting on the graph, but you will only get full points if you use some code to figure it out.
 
-\_\_\_
+* There are 41 bird orders, this can be seen by reading the table and using the code read.table(order) or by using a contingency table.
+read.table(order)
 
 > F. Insert an R code chunk and create a graph depicting the distribution of orders in the birds dataset. Sort the orders with the most frequent on the left. It should have legible text and appropriate axis labels.
 
-\_\_\_
+```{r}
+
+library (tidyverse)
+
+library(auk)                          # load the auk package
+birds <- ebird_taxonomy %>%           # start with the ebird_taxonomy data
+  as_tibble() %>%                     # tibbles print better in the console
+  filter(category == "species")       # remove non-species taxa
+
+ggplot(data = birds) +
+  geom_bar(mapping = aes(x = fct_infreq(order)), fill = "#C5351B", 
+           width = .8) +
+  labs(x = "Order type", y = "Frequency of birds in each order", 
+       title = "Number of bird species in each order" )+
+  scale_y_log10() +
+  theme_classic(base_size = 12) +
+  theme(
+    axis.title = element_text(size = rel(0.9)),
+    axis.text = element_text(color = "black", size = rel(.6)),
+    axis.text.x = element_text(angle = 65, hjust = 1),
+    axis.ticks.x = element_blank() )
+  
+    
+       
+  
+
+```
 
 > G. What kind of graph did you create? Why?
 
-\_\_\_
+* We created a bar graph, this is because our data set we are looking at consists of a categorical variable
 
 ## Links to peer review
 
-I reviewed \_\_\_'s lab report at this URL: \_\_\_
+I reviewed Carter Martinson's lab report at this URL: https://github.com/BIOL275-MSUM/lab-3-intro-to-ggplot-cartermartinson1
 
-\_\_\_ reviewed my lab report at this URL: \_\_\_
+Carter Martinson reviewed my lab report at this URL: https://github.com/BIOL275-MSUM/lab-3-intro-to-ggplot-chayes307/issues
 
 ## Session Info
 
